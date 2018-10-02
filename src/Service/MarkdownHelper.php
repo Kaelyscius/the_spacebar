@@ -11,6 +11,7 @@ class MarkdownHelper
     private $cache;
     private $markdown;
     private $logger;
+    private $isDebug;
 
     /**
      * MarkdownHelper constructor.
@@ -19,15 +20,21 @@ class MarkdownHelper
      * @param MarkdownInterface $markdown
      * @param LoggerInterface   $markdownLogger
      */
-    public function __construct(AdapterInterface $cache, MarkdownInterface $markdown, LoggerInterface $markdownLogger)
+    public function __construct(AdapterInterface $cache, MarkdownInterface $markdown, LoggerInterface $markdownLogger, bool $isDebug)
     {
         $this->cache = $cache;
         $this->markdown = $markdown;
         $this->logger = $markdownLogger;
+        $this->isDebug = $isDebug;
     }
 
     public function parse(string $source): string
     {
+        // skip caching entirely in debug
+        if ($this->isDebug) {
+            return $this->markdown->transform($source);
+        }
+
         if (false !== stripos($source, 'bacon')) {
             $this->logger->info('They are talking about bacon again!');
         }
