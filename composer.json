@@ -5,6 +5,7 @@
         "php": "^7.2.4",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "fzaninotto/faker": "^1.8",
         "knplabs/knp-markdown-bundle": "^1.7",
         "knplabs/knp-time-bundle": "^1.8",
         "nexylan/slack-bundle": "^2.0",
