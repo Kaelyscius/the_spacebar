@@ -9,6 +9,7 @@
 namespace App\Controller;
 
 use App\Entity\Article;
+use App\Repository\ArticleRepository;
 use App\Service\MarkdownHelper;
 use App\Service\SlackClient;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,11 +23,21 @@ class ArticleController extends AbstractController
     /**
      * @Route("/", name="app_homepage")
      *
+     * @param ArticleRepository $repository
+     *
      * @return Response
      */
-    public function homepage()
+    public function homepage(ArticleRepository $repository)
     {
-        return $this->render('article/homepage.html.twig');
+        //Pas besoin d'entity manager parceque le repository est déjà enregistré comme un service dans le container
+//        $repository = $em->getRepository(Article::class);
+        // Le premier paramètre est whère. Si on passe rien, tout match. (Permet de faire un find all avec critère)
+//        $articles = $repository->findBy([], ['publishedAt' => 'DESC']);
+        $articles = $repository->findAllPublishedOrderedByNewest();
+
+        return $this->render('article/homepage.html.twig', [
+            'articles' => $articles,
+        ]);
     }
 
     /**
