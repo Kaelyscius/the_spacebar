@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Article;
+use App\Entity\Comment;
 use Doctrine\Common\Persistence\ObjectManager;
 
 class ArticleFixtures extends BaseFixture
@@ -27,7 +28,7 @@ class ArticleFixtures extends BaseFixture
      */
     protected function loadData(ObjectManager $manager)
     {
-        $this->createMany(Article::class, 10, function (Article $article, $count) {
+        $this->createMany(Article::class, 10, function (Article $article, $count) use ($manager) {
             $article->setTitle($this->faker->randomElement(self::$articleTitles))
                 ->setContent(<<<EOF
 Spicy **jalapeno bacon** ipsum dolor amet veniam shank in dolore. Ham hock nisi landjaeger cow,
@@ -54,6 +55,17 @@ EOF
                 ->setHeartCount($this->faker->numberBetween(5, 100))
                 ->setImageFilename($this->faker->randomElement(self::$articleImages))
             ;
+            $comment1 = new  Comment();
+            $comment1->setAuthorName('Mike Ferengi');
+            $comment1->setContent('Good Article ! ');
+            $comment1->setArticle($article);
+            $manager->persist($comment1);
+
+            $comment2 = new  Comment();
+            $comment2->setAuthorName('Mike Ferengi');
+            $comment2->setContent('Now would this be apple wood smoked bacon? Or traditional bacon - IMHO it makes a difference.! ');
+            $comment2->setArticle($article);
+            $manager->persist($comment2);
         });
 
         $manager->flush();
