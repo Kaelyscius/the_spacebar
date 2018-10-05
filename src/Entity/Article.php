@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ArticleRepository")
@@ -22,6 +23,10 @@ class Article
     private $title;
 
     /**
+     * Crée un slug en partant du titre, et s'assure qu'il est unique en base !
+     * Plus besoin de s'en occuper !
+     *
+     * @Gedmo\Slug(fields={"title"})
      * @ORM\Column(type="string", length=100, unique=true)
      */
     private $slug;
