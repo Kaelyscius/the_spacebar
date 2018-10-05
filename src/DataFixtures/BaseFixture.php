@@ -18,7 +18,37 @@ abstract class BaseFixture extends Fixture
      */
     protected $faker;
 
+    private $referencesIndex = [];
+
     abstract protected function loadData(ObjectManager $em);
+
+    /**
+     * On lui passe une classe, et il le lie à la classe passé en référence.
+     * Ex : Un commentaire sera ajouté aléatoirement à un article.
+     *
+     * @param string $className
+     *
+     * @return object
+     *
+     * @throws \Exception
+     */
+    protected function getRandomReference(string $className)
+    {
+        if (!isset($this->referencesIndex[$className])) {
+            $this->referencesIndex[$className] = [];
+            foreach ($this->referenceRepository->getReferences() as $key => $ref) {
+                if (0 === strpos($key, $className.'_')) {
+                    $this->referencesIndex[$className][] = $key;
+                }
+            }
+        }
+        if (empty($this->referencesIndex[$className])) {
+            throw new \Exception(sprintf('Cannot find any references for class "%s"', $className));
+        }
+        $randomReferenceKey = $this->faker->randomElement($this->referencesIndex[$className]);
+
+        return $this->getReference($randomReferenceKey);
+    }
 
     public function load(ObjectManager $manager)
     {
