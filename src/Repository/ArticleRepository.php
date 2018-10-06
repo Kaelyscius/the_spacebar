@@ -58,18 +58,19 @@ class ArticleRepository extends ServiceEntityRepository
             ->andWhere('a.publishedAt IS NOT NULL');
     }
 
-    private function getOrCreateQueryBuilder(QueryBuilder $qb = null)
+    private function getOrCreateQueryBuilder(QueryBuilder $qb = null): QueryBuilder
     {
         // Si QueryBuilder existe, on renvoie, sinon on en créer un
         return $qb ?: $this->createQueryBuilder('a');
     }
 
-	/**
-	 * @return Criteria
-	 */
-	public static function createNonDeletedCriteria():Criteria{
-	    return Criteria::create()
-		    ->andWhere(Criteria::expr()->eq('isDeleted', false))
-		    ->orderBy(['createdAt' => 'DESC']);
+    /**
+     * @return Criteria
+     */
+    public static function createNonDeletedCriteria(): Criteria
+    {
+        return Criteria::create()
+            ->andWhere(Criteria::expr()->eq('isDeleted', false))
+            ->orderBy(['createdAt' => 'DESC']);
     }
 }
