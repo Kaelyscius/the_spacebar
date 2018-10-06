@@ -14,6 +14,7 @@
                            name="q"
                            class="form-control"
                            placeholder="Search..."
+                           value="{{ app.request.query.get('q') }}"
                     >
                     <div class="input-group-append">
                         <button type="submit"
@@ -23,7 +24,7 @@
                     </div>
                 </div>
             </form>
-            
+
             <table class="table table-striped">
                 <thead>
                 <tr>
@@ -49,6 +50,12 @@
                         </td>
                         <td>
                             {{ comment.createdAt|ago }}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center">
+                            No comments found
                         </td>
                     </tr>
                 {% endfor %}
