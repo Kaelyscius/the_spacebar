@@ -19,7 +19,8 @@
         "symfony/orm-pack": "^1.0",
         "symfony/twig-bundle": "*",
         "symfony/web-server-bundle": "*",
-        "symfony/yaml": "*"
+        "symfony/yaml": "*",
+        "twig/extensions": "^1.5"
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.0",
