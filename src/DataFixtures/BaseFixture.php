@@ -74,4 +74,14 @@ abstract class BaseFixture extends Fixture
             $this->addReference($className.'_'.$i, $entity);
         }
     }
+
+    protected function getRandomReferences(string $className, int $count): array
+    {
+        $references = [];
+        while (\count($references) < $count) {
+            $references[] = $this->getRandomReference($className);
+        }
+
+        return $references;
+    }
 }
