@@ -29,11 +29,12 @@ class AccountController extends BaseController
     /**
      * @Route("/api/account", name="api_account")
      */
-    public function accountApi()
+    public function accountApi(): \Symfony\Component\HttpFoundation\JsonResponse
     {
         $user = $this->getUser();
 
         return $this->json($user, 200, [], [
+            // Va cherche l'annotation main dans le model User
             'groups' => ['main'],
         ]);
     }
