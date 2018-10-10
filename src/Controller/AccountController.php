@@ -18,7 +18,7 @@ class AccountController extends BaseController
      *
      * @return
      */
-    public function index(LoggerInterface $logger)
+    public function index(LoggerInterface $logger): \Symfony\Component\HttpFoundation\Response
     {
         $logger->debug('Checking account page for '.$this->getUser()->getEmail());
 
