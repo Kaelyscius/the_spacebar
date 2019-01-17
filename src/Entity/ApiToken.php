@@ -24,7 +24,7 @@ class ApiToken
     /**
      * @ORM\Column(type="datetime")
      */
-    private $expireAt;
+    private $expiresAt;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="apiTokens")
@@ -36,7 +36,7 @@ class ApiToken
     {
         $this->token = bin2hex(random_bytes(60));
         $this->user = $user;
-        $this->expireAt = new \DateTime('+1 hour');
+        $this->expiresAt = new \DateTime('+1 hour');
     }
 
     public function getId(): ?int
@@ -49,9 +49,9 @@ class ApiToken
         return $this->token;
     }
 
-    public function getExpireAt(): ?\DateTimeInterface
+    public function getExpiresAt(): ?\DateTimeInterface
     {
-        return $this->expireAt;
+        return $this->expiresAt;
     }
 
     public function getUser(): ?User
@@ -62,5 +62,10 @@ class ApiToken
     public function renewExpiresAt()
     {
         $this->expiresAt = new \DateTime('+1 hour');
+    }
+
+    public function isExpired(): bool
+    {
+        return $this->getExpiresAt() <= new \DateTime();
     }
 }
