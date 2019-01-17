@@ -120,9 +120,9 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
      * @param TokenInterface $token
      * @param string         $providerKey
      *
-     * @return null|\Symfony\Component\HttpFoundation\Response|void
+     * @return RedirectResponse
      */
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey): RedirectResponse
     {
         if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey)) {
             return new RedirectResponse($targetPath);
