@@ -58,7 +58,7 @@ class ArticleVoter extends Voter
             case 'MANAGE':
                 // this is the author!
                 if ($user === $subject->getAuthor()) {
-//                    return true;
+                    return true;
                 }
                 if ($this->security->isGranted('ROLE_ADMIN_ARTICLE')) {
                     return true;
