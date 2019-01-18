@@ -58,22 +58,36 @@ class User implements UserInterface
      */
     private $articles;
 
+    /**
+     * User constructor.
+     */
     public function __construct()
     {
         $this->apiTokens = new ArrayCollection();
         $this->articles = new ArrayCollection();
     }
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return string|null
+     */
     public function getEmail(): ?string
     {
         return $this->email;
     }
 
+    /**
+     * @param string $email
+     *
+     * @return User
+     */
     public function setEmail(string $email): self
     {
         $this->email = $email;
@@ -103,6 +117,11 @@ class User implements UserInterface
         return array_unique($roles);
     }
 
+    /**
+     * @param array $roles
+     *
+     * @return User
+     */
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
@@ -135,11 +154,19 @@ class User implements UserInterface
         // $this->plainPassword = null;
     }
 
+    /**
+     * @return string|null
+     */
     public function getFirstName(): ?string
     {
         return $this->firstName;
     }
 
+    /**
+     * @param string $firstName
+     *
+     * @return User
+     */
     public function setFirstName(string $firstName): self
     {
         $this->firstName = $firstName;
@@ -147,6 +174,11 @@ class User implements UserInterface
         return $this;
     }
 
+    /**
+     * @param string $password
+     *
+     * @return User
+     */
     public function setPassword(string $password): self
     {
         $this->password = $password;
@@ -154,11 +186,19 @@ class User implements UserInterface
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getTwitterUsername(): ?string
     {
         return $this->twitterUsername;
     }
 
+    /**
+     * @param string|null $twitterUsername
+     *
+     * @return User
+     */
     public function setTwitterUsername(?string $twitterUsername): self
     {
         $this->twitterUsername = $twitterUsername;
@@ -166,6 +206,11 @@ class User implements UserInterface
         return $this;
     }
 
+    /**
+     * @param int|null $size
+     *
+     * @return string
+     */
     public function getAvatarUrl(int $size = null)
     {
         $url = 'https://robohash.org/'.$this->getEmail();
@@ -185,6 +230,11 @@ class User implements UserInterface
         return $this->apiTokens;
     }
 
+    /**
+     * @param ApiToken $apiToken
+     *
+     * @return User
+     */
     public function addApiToken(ApiToken $apiToken): self
     {
         if (!$this->apiTokens->contains($apiToken)) {
@@ -195,6 +245,11 @@ class User implements UserInterface
         return $this;
     }
 
+    /**
+     * @param ApiToken $apiToken
+     *
+     * @return User
+     */
     public function removeApiToken(ApiToken $apiToken): self
     {
         if ($this->apiTokens->contains($apiToken)) {
@@ -216,6 +271,11 @@ class User implements UserInterface
         return $this->articles;
     }
 
+    /**
+     * @param Article $article
+     *
+     * @return User
+     */
     public function addArticle(Article $article): self
     {
         if (!$this->articles->contains($article)) {
@@ -226,6 +286,11 @@ class User implements UserInterface
         return $this;
     }
 
+    /**
+     * @param Article $article
+     *
+     * @return User
+     */
     public function removeArticle(Article $article): self
     {
         if ($this->articles->contains($article)) {
@@ -239,6 +304,9 @@ class User implements UserInterface
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function __toString()
     {
         return $this->getFirstName();

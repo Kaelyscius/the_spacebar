@@ -39,16 +39,27 @@ class Comment
      */
     private $isDeleted = false;
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return string|null
+     */
     public function getContent(): ?string
     {
         return $this->content;
     }
 
+    /**
+     * @param string $content
+     *
+     * @return Comment
+     */
     public function setContent(string $content): self
     {
         $this->content = $content;
@@ -56,11 +67,19 @@ class Comment
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getAuthorName(): ?string
     {
         return $this->authorName;
     }
 
+    /**
+     * @param string $authorName
+     *
+     * @return Comment
+     */
     public function setAuthorName(string $authorName): self
     {
         $this->authorName = $authorName;
@@ -68,11 +87,19 @@ class Comment
         return $this;
     }
 
+    /**
+     * @return Article|null
+     */
     public function getArticle(): ?Article
     {
         return $this->article;
     }
 
+    /**
+     * @param Article|null $article
+     *
+     * @return Comment
+     */
     public function setArticle(?Article $article): self
     {
         $this->article = $article;
@@ -80,11 +107,19 @@ class Comment
         return $this;
     }
 
+    /**
+     * @return bool|null
+     */
     public function getIsDeleted(): ?bool
     {
         return $this->isDeleted;
     }
 
+    /**
+     * @param bool $isDeleted
+     *
+     * @return Comment
+     */
     public function setIsDeleted(bool $isDeleted): self
     {
         $this->isDeleted = $isDeleted;

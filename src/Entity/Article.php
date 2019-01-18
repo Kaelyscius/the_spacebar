@@ -74,22 +74,36 @@ class Article
      */
     private $author;
 
+    /**
+     * Article constructor.
+     */
     public function __construct()
     {
         $this->comments = new ArrayCollection();
         $this->tags = new ArrayCollection();
     }
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return string|null
+     */
     public function getTitle(): ?string
     {
         return $this->title;
     }
 
+    /**
+     * @param string $title
+     *
+     * @return Article
+     */
     public function setTitle(string $title): self
     {
         $this->title = $title;
@@ -97,11 +111,19 @@ class Article
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getSlug(): ?string
     {
         return $this->slug;
     }
 
+    /**
+     * @param string $slug
+     *
+     * @return Article
+     */
     public function setSlug(string $slug): self
     {
         $this->slug = $slug;
@@ -109,11 +131,19 @@ class Article
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getContent(): ?string
     {
         return $this->content;
     }
 
+    /**
+     * @param string|null $content
+     *
+     * @return Article
+     */
     public function setContent(?string $content): self
     {
         $this->content = $content;
@@ -121,11 +151,19 @@ class Article
         return $this;
     }
 
+    /**
+     * @return \DateTimeInterface|null
+     */
     public function getPublishedAt(): ?\DateTimeInterface
     {
         return $this->publishedAt;
     }
 
+    /**
+     * @param \DateTimeInterface $publishedAt
+     *
+     * @return Article
+     */
     public function setPublishedAt(\DateTimeInterface $publishedAt): self
     {
         $this->publishedAt = $publishedAt;
@@ -133,11 +171,19 @@ class Article
         return $this;
     }
 
+    /**
+     * @return int|null
+     */
     public function getHeartCount(): ?int
     {
         return $this->heartCount;
     }
 
+    /**
+     * @param int $heartCount
+     *
+     * @return Article
+     */
     public function setHeartCount(int $heartCount): self
     {
         $this->heartCount = $heartCount;
@@ -145,11 +191,19 @@ class Article
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getImageFilename(): ?string
     {
         return $this->imageFilename;
     }
 
+    /**
+     * @param string|null $imageFilename
+     *
+     * @return Article
+     */
     public function setImageFilename(?string $imageFilename): self
     {
         $this->imageFilename = $imageFilename;
@@ -157,11 +211,17 @@ class Article
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getImagePath()
     {
         return 'images/'.$this->getImageFilename();
     }
 
+    /**
+     * @return Article
+     */
     public function incrementHeartCount(): self
     {
         ++$this->heartCount;
@@ -187,6 +247,11 @@ class Article
         return $this->comments->matching($criteria);
     }
 
+    /**
+     * @param Comment $comment
+     *
+     * @return Article
+     */
     public function addComment(Comment $comment): self
     {
         if (!$this->comments->contains($comment)) {
@@ -197,6 +262,11 @@ class Article
         return $this;
     }
 
+    /**
+     * @param Comment $comment
+     *
+     * @return Article
+     */
     public function removeComment(Comment $comment): self
     {
         if ($this->comments->contains($comment)) {
@@ -218,6 +288,11 @@ class Article
         return $this->tags;
     }
 
+    /**
+     * @param Tag $tag
+     *
+     * @return Article
+     */
     public function addTag(Tag $tag): self
     {
         if (!$this->tags->contains($tag)) {
@@ -227,6 +302,11 @@ class Article
         return $this;
     }
 
+    /**
+     * @param Tag $tag
+     *
+     * @return Article
+     */
     public function removeTag(Tag $tag): self
     {
         if ($this->tags->contains($tag)) {
@@ -236,15 +316,31 @@ class Article
         return $this;
     }
 
+    /**
+     * @return User|null
+     */
     public function getAuthor(): ?User
     {
         return $this->author;
     }
 
+    /**
+     * @param User|null $author
+     *
+     * @return Article
+     */
     public function setAuthor(?User $author): self
     {
         $this->author = $author;
 
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPublished(): bool
+    {
+        return null !== $this->publishedAt;
     }
 }
