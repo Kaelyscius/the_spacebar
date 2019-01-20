@@ -62,10 +62,11 @@ class ArticleAdminController extends AbstractController
     public function edit(Article $article, Request $request, EntityManagerInterface $em): Response
     {
         $form = $this->createForm(ArticleFormType::class, $article);
+
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var Article $article */
-            $article = $form->getData();
+            /* @var Article $article */
             $em->persist($article);
             $em->flush();
             $this->addFlash('success', 'Article Updated! Inaccuracies squashed!');
