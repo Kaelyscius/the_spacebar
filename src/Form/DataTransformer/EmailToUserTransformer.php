@@ -10,6 +10,10 @@ use Symfony\Component\Form\Exception\TransformationFailedException;
 class EmailToUserTransformer implements DataTransformerInterface
 {
     private $userRepository;
+    /**
+     * @var callable
+     */
+    private $finderCallback;
 
     /**
      * EmailToUserTransformer constructor.Because this class is not instantiated by Symfony's container.
@@ -17,9 +21,10 @@ class EmailToUserTransformer implements DataTransformerInterface
      *
      * @param UserRepository $userRepository
      */
-    public function __construct(UserRepository $userRepository)
+    public function __construct(UserRepository $userRepository, callable $finderCallback)
     {
         $this->userRepository = $userRepository;
+        $this->finderCallback = $finderCallback;
     }
 
     /**
@@ -55,8 +60,9 @@ class EmailToUserTransformer implements DataTransformerInterface
         if (!$value) {
             return;
         }
+        $callback = $this->finderCallback;
+        $user = $callback($this->userRepository, $value);
 
-        $user = $this->userRepository->findOneBy(['email' => $value]);
         if (!$user) {
             throw new TransformationFailedException(sprintf('No user found with email "%s"', $value));
         }
