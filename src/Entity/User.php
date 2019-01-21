@@ -336,4 +336,12 @@ class User implements UserInterface
 
         return $this;
     }
+
+    /**
+     * @throws \Exception
+     */
+    public function agreeToTerms(): void
+    {
+        $this->agreedTermsAt = new \DateTime();
+    }
 }
