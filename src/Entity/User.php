@@ -67,6 +67,11 @@ class User implements UserInterface
     private $articles;
 
     /**
+     * @ORM\Column(type="datetime")
+     */
+    private $agreedTermsAt;
+
+    /**
      * User constructor.
      */
     public function __construct()
@@ -318,5 +323,17 @@ class User implements UserInterface
     public function __toString()
     {
         return $this->getFirstName();
+    }
+
+    public function getAgreedTermsAt(): ?\DateTimeInterface
+    {
+        return $this->agreedTermsAt;
+    }
+
+    public function setAgreedTermsAt(\DateTimeInterface $agreedTermsAt): self
+    {
+        $this->agreedTermsAt = $agreedTermsAt;
+
+        return $this;
     }
 }
