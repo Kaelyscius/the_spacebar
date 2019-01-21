@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\Model\UserRegistrationFormModel;
 use App\Form\UserRegistrationFormType;
 use App\Security\LoginFormAuthenticator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -51,31 +52,30 @@ class SecurityController extends AbstractController
      * @param LoginFormAuthenticator       $formAuthenticator
      *
      * @return Response
+     *
+     * @throws \Exception
      */
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler  $guardHandler, LoginFormAuthenticator $formAuthenticator): Response
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, LoginFormAuthenticator $formAuthenticator)
     {
         $form = $this->createForm(UserRegistrationFormType::class);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var User $user */
-            $user = $form->getData();
-
+            /** @var UserRegistrationFormModel $userModel */
+            $userModel = $form->getData();
+            $user = new User();
+            $user->setEmail($userModel->email);
             $user->setPassword($passwordEncoder->encodePassword(
                 $user,
-                $form['plainPassword']->getData()
+                $userModel->plainPassword
             ));
-
             // be absolutely sure they agree
-            if (true === $form['agreeTerms']->getData()) {
+            if (true === $userModel->agreeTerms) {
                 $user->agreeToTerms();
             }
-
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
 
-            // Connect the user after registration
             return $guardHandler->authenticateUserAndHandleSuccess(
                 $user,
                 $request,
