@@ -382,6 +382,10 @@ class Article
     {
         $this->location = $location;
 
+        if (!$this->location || 'interstellar_space' === $this->location) {
+            $this->setSpecificLocationName(null);
+        }
+
         return $this;
     }
 

@@ -133,6 +133,6 @@ class ArticleFormType extends AbstractType
                 'interstellar_space' => null,
             ];
 
-        return $locationNameChoices[$location];
+        return $locationNameChoices[$location] ?? null;
     }
 }
