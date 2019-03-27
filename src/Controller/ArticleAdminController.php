@@ -18,12 +18,6 @@ class ArticleAdminController extends BaseController
     /**
      * @Route("/admin/article/new", name="admin_article_new")
      * @IsGranted("ROLE_ADMIN_ARTICLE")
-     *
-     * @param EntityManagerInterface $em
-     * @param Request                $request
-     * @param UploaderHelper         $uploaderHelper
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
     public function new(EntityManagerInterface $em, Request $request, UploaderHelper $uploaderHelper)
     {
@@ -38,7 +32,7 @@ class ArticleAdminController extends BaseController
             $uploadedFile = $form['imageFile']->getData();
 
             if ($uploadedFile) {
-                $newFilename = $uploaderHelper->uploadArticleImage($uploadedFile);
+                $newFilename = $uploaderHelper->uploadArticleImage($uploadedFile, $article->getImageFilename());
                 $article->setImageFilename($newFilename);
             }
 
@@ -69,11 +63,8 @@ class ArticleAdminController extends BaseController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var UploadedFile $uploadedFile */
             $uploadedFile = $form['imageFile']->getData();
-
             if ($uploadedFile) {
-                $newFilename = $uploaderHelper->uploadArticleImage($uploadedFile);
-                $article->setImageFilename($newFilename);
-
+                $newFilename = $uploaderHelper->uploadArticleImage($uploadedFile, $article->getImageFilename());
                 $article->setImageFilename($newFilename);
             }
 
