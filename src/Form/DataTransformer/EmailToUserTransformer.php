@@ -10,37 +10,20 @@ use Symfony\Component\Form\Exception\TransformationFailedException;
 class EmailToUserTransformer implements DataTransformerInterface
 {
     private $userRepository;
-    /**
-     * @var callable
-     */
     private $finderCallback;
 
-    /**
-     * EmailToUserTransformer constructor.Because this class is not instantiated by Symfony's container.
-     * we pass UserRepository in UserSelectTextType.php.
-     *
-     * @param UserRepository $userRepository
-     */
     public function __construct(UserRepository $userRepository, callable $finderCallback)
     {
         $this->userRepository = $userRepository;
         $this->finderCallback = $finderCallback;
     }
 
-    /**
-     * Get a property by a Model.
-     *
-     * @param mixed $value
-     *
-     * @return mixed|string|null
-     */
     public function transform($value)
     {
         if (null === $value) {
             return '';
         }
 
-        //Sanity check
         if (!$value instanceof User) {
             throw new \LogicException('The UserSelectTextType can only be used with User objects');
         }
@@ -48,18 +31,12 @@ class EmailToUserTransformer implements DataTransformerInterface
         return $value->getEmail();
     }
 
-    /**
-     * Get the Model by a property given. Need user Repository to query by property.
-     *
-     * @param mixed $value
-     *
-     * @return User|mixed|null
-     */
     public function reverseTransform($value)
     {
         if (!$value) {
             return;
         }
+
         $callback = $this->finderCallback;
         $user = $callback($this->userRepository, $value);
 

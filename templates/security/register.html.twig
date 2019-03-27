@@ -8,7 +8,7 @@
     {%- endif -%}
 
     {{- form_label(form, null, {
-        label_attr: { class: 'sr-only' }
+            label_attr: { class: 'sr-only' }
     }) -}}
     {{- form_errors(form) -}}
     {{- form_widget(form, widget_attr) -}}
@@ -33,12 +33,12 @@
 {% endblock %}
 
 {% block body %}
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                {{ form_start(registrationForm, {
-                    'attr': {'class': 'form-signin'}
-                }) }}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            {{ form_start(registrationForm, {
+                'attr': {'class': 'form-signin'}
+            }) }}
                 <h1 class="h3 mb-3 font-weight-normal">Register</h1>
                 {{ form_row(registrationForm.email, {
                     attr: { placeholder: 'Email' }
@@ -51,26 +51,27 @@
                 <button class="btn btn-lg btn-primary btn-block" type="submit">
                     Register
                 </button>
-                {{ form_end(registrationForm) }}
+            {{ form_end(registrationForm) }}
 
-                {#
-                <form class="form-signin" method="post">
-                    <h1 class="h3 mb-3 font-weight-normal">Register</h1>
-                    <label for="inputEmail" class="sr-only">Email address</label>
-                    <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
-                    <label for="inputPassword" class="sr-only">Password</label>
-                    <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
-                    <div class="checkbox mb-3">
-                        <label>
-                            <input type="checkbox" name="_terms" required> Agree to terms I for sure read
-                        </label>
-                    </div>
-                    <button class="btn btn-lg btn-primary btn-block" type="submit">
-                        Register
-                    </button>
-                </form>
-                #}
-            </div>
+            {#
+            <form class="form-signin" method="post">
+                <h1 class="h3 mb-3 font-weight-normal">Register</h1>
+                <label for="inputEmail" class="sr-only">Email address</label>
+                <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+                <label for="inputPassword" class="sr-only">Password</label>
+                <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
+
+                <div class="checkbox mb-3">
+                    <label>
+                        <input type="checkbox" name="_terms" required> Agree to terms I for sure read
+                    </label>
+                </div>
+                <button class="btn btn-lg btn-primary btn-block" type="submit">
+                    Register
+                </button>
+            </form>
+            #}
         </div>
     </div>
+</div>
 {% endblock %}

@@ -1,7 +1,8 @@
 security:
     encoders:
         App\Entity\User:
-            algorithm: argon2i
+            algorithm: bcrypt
+
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         # used to reload user from session & other features (e.g. switch_user)
@@ -9,6 +10,7 @@ security:
             entity:
                 class: App\Entity\User
                 property: email
+
     role_hierarchy:
         ROLE_ADMIN: [ROLE_ADMIN_COMMENT, ROLE_ADMIN_ARTICLE, ROLE_ALLOWED_TO_SWITCH]
 
@@ -23,6 +25,7 @@ security:
                 authenticators:
                     - App\Security\LoginFormAuthenticator
                     - App\Security\ApiTokenAuthenticator
+
                 # redirect anonymous users to the login page
                 entry_point: App\Security\LoginFormAuthenticator
 
@@ -33,7 +36,8 @@ security:
                 secret:   '%kernel.secret%'
                 lifetime: 2592000 # 30 days in seconds
 
-            switch_user: true #Allow admin to switch as a customer
+            switch_user: true
+
             # activate different ways to authenticate
 
             # http_basic: true

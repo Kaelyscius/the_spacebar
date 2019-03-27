@@ -17,7 +17,7 @@ class ArticleStatsCommand extends Command
     {
         $this
             ->setDescription('Returns some article stats!')
-            ->addArgument('slug', InputArgument::OPTIONAL, 'The article\'s slug')
+            ->addArgument('slug', InputArgument::REQUIRED, 'The article\'s slug')
             ->addOption('format', null, InputOption::VALUE_REQUIRED, 'The output format', 'text')
         ;
     }
@@ -26,10 +26,12 @@ class ArticleStatsCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
         $slug = $input->getArgument('slug');
+
         $data = [
             'slug' => $slug,
             'hearts' => rand(10, 100),
         ];
+
         switch ($input->getOption('format')) {
             case 'text':
                 $rows = [];

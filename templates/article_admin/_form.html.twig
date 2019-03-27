@@ -9,14 +9,15 @@
             'class': 'js-article-form-location'
         }
     }) }}
-<div class="js-specific-location-target">
-    {%  if articleForm.specificLocationName is defined %}
-        {{ form_row(articleForm.specificLocationName) }}
-    {% endif %}
-</div>
-{{ form_row(articleForm.content) }}
+    <div class="js-specific-location-target">
+        {%  if articleForm.specificLocationName is defined %}
+            {{ form_row(articleForm.specificLocationName) }}
+        {% endif %}
+    </div>
+    {{ form_row(articleForm.content) }}
     {% if articleForm.publishedAt is defined %}
         {{ form_row(articleForm.publishedAt) }}
     {% endif %}
-<button type="submit" class="btn btn-primary">{{ button_text }}</button>
+
+    <button type="submit" class="btn btn-primary">{{ button_text }}</button>
 {{ form_end(articleForm) }}

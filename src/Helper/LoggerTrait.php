@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Helper;
 
 use Psr\Log\LoggerInterface;
@@ -12,10 +11,9 @@ trait LoggerTrait
     private $logger;
 
     /**
-     * @param LoggerInterface $logger
-     * @required //Pour dire à symfony qu'il faut aller le logger avant d'instancier la classe
+     * @required
      */
-    public function setLooger(LoggerInterface $logger)
+    public function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }

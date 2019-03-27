@@ -1,6 +1,7 @@
 $(document).ready(function() {
     $('.js-user-autocomplete').each(function() {
         var autocompleteUrl = $(this).data('autocomplete-url');
+
         $(this).autocomplete({hint: false}, [
             {
                 source: function(query, cb) {

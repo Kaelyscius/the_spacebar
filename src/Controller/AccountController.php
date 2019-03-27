@@ -13,28 +13,23 @@ class AccountController extends BaseController
 {
     /**
      * @Route("/account", name="app_account")
-     *
-     * @param LoggerInterface $logger
-     *
-     * @return
      */
-    public function index(LoggerInterface $logger): \Symfony\Component\HttpFoundation\Response
+    public function index(LoggerInterface $logger)
     {
         $logger->debug('Checking account page for '.$this->getUser()->getEmail());
-
         return $this->render('account/index.html.twig', [
+
         ]);
     }
 
     /**
      * @Route("/api/account", name="api_account")
      */
-    public function accountApi(): \Symfony\Component\HttpFoundation\JsonResponse
+    public function accountApi()
     {
         $user = $this->getUser();
 
         return $this->json($user, 200, [], [
-            // Va cherche l'annotation main dans le model User
             'groups' => ['main'],
         ]);
     }

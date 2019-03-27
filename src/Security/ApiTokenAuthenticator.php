@@ -31,6 +31,7 @@ class ApiTokenAuthenticator extends AbstractGuardAuthenticator
     public function getCredentials(Request $request)
     {
         $authorizationHeader = $request->headers->get('Authorization');
+
         // skip beyond "Bearer "
         return substr($authorizationHeader, 7);
     }
@@ -38,7 +39,7 @@ class ApiTokenAuthenticator extends AbstractGuardAuthenticator
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
         $token = $this->apiTokenRepo->findOneBy([
-            'token' => $credentials,
+            'token' => $credentials
         ]);
 
         if (!$token) {
@@ -64,13 +65,13 @@ class ApiTokenAuthenticator extends AbstractGuardAuthenticator
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
         return new JsonResponse([
-            'message' => $exception->getMessageKey(),
+            'message' => $exception->getMessageKey()
         ], 401);
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
-        // todo
+        // allow the request to continue
     }
 
     public function start(Request $request, AuthenticationException $authException = null)

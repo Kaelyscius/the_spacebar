@@ -4,7 +4,6 @@ namespace App\Repository;
 
 use App\Entity\Article;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -22,13 +21,13 @@ class ArticleRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Article[] Returns an array of Article objects
+     * @return Article[]
      */
     public function findAllPublishedOrderedByNewest()
     {
         return $this->addIsPublishedQueryBuilder()
-            ->leftJoin('a.tags', 't') //Pas besoin de join toutes les tables avec un many to many
-            ->addSelect('t') //doctrine sait comment marche la relation entre article et tag
+            ->leftJoin('a.tags', 't')
+            ->addSelect('t')
             ->orderBy('a.publishedAt', 'DESC')
             ->getQuery()
             ->getResult()
@@ -47,32 +46,14 @@ class ArticleRepository extends ServiceEntityRepository
     }
     */
 
-    /**
-     * @param QueryBuilder $qb
-     *
-     * @return queryBuilder
-     *
-     * Il va se charger tout seul de créer un QueryBuilder ou pas
-     */
-    private function addIsPublishedQueryBuilder(QueryBuilder $qb = null): QueryBuilder
+    private function addIsPublishedQueryBuilder(QueryBuilder $qb = null)
     {
         return $this->getOrCreateQueryBuilder($qb)
             ->andWhere('a.publishedAt IS NOT NULL');
     }
 
-    private function getOrCreateQueryBuilder(QueryBuilder $qb = null): QueryBuilder
+    private function getOrCreateQueryBuilder(QueryBuilder $qb = null)
     {
-        // Si QueryBuilder existe, on renvoie, sinon on en créer un
         return $qb ?: $this->createQueryBuilder('a');
-    }
-
-    /**
-     * @return Criteria
-     */
-    public static function createNonDeletedCriteria(): Criteria
-    {
-        return Criteria::create()
-            ->andWhere(Criteria::expr()->eq('isDeleted', false))
-            ->orderBy(['createdAt' => 'DESC']);
     }
 }

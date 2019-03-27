@@ -28,14 +28,11 @@ class UserRepository extends ServiceEntityRepository
             ->orderBy('u.email', 'ASC')
             ->getQuery()
             ->execute()
-            ;
+        ;
     }
 
     /**
-     * @param string $query
-     * @param int    $limit
-     *
-     * @return mixed
+     * @return User[]
      */
     public function findAllMatching(string $query, int $limit = 5)
     {

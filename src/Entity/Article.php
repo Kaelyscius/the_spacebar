@@ -2,9 +2,10 @@
 
 namespace App\Entity;
 
-use App\Repository\ArticleRepository;
+use App\Repository\CommentRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -17,6 +18,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 class Article
 {
     use TimestampableEntity;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -31,11 +33,8 @@ class Article
     private $title;
 
     /**
-     * Crée un slug en partant du titre, et s'assure qu'il est unique en base !
-     * Plus besoin de s'en occuper !
-     *
-     * @Gedmo\Slug(fields={"title"})
      * @ORM\Column(type="string", length=100, unique=true)
+     * @Gedmo\Slug(fields={"title"})
      */
     private $slug;
 
@@ -51,7 +50,6 @@ class Article
 
     /**
      * @ORM\Column(type="integer")
-     * Default value = 0
      */
     private $heartCount = 0;
 
@@ -62,7 +60,7 @@ class Article
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="article", fetch="EXTRA_LAZY")
-     * @ORM\OrderBy({"createdAt"="DESC"})
+     * @ORM\OrderBy({"createdAt" = "DESC"})
      */
     private $comments;
 
@@ -88,36 +86,22 @@ class Article
      */
     private $specificLocationName;
 
-    /**
-     * Article constructor.
-     */
     public function __construct()
     {
         $this->comments = new ArrayCollection();
         $this->tags = new ArrayCollection();
     }
 
-    /**
-     * @return int|null
-     */
-    public function getId(): ?int
+    public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * @return string|null
-     */
     public function getTitle(): ?string
     {
         return $this->title;
     }
 
-    /**
-     * @param string $title
-     *
-     * @return Article
-     */
     public function setTitle(string $title): self
     {
         $this->title = $title;
@@ -125,19 +109,12 @@ class Article
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
+
     public function getSlug(): ?string
     {
         return $this->slug;
     }
 
-    /**
-     * @param string $slug
-     *
-     * @return Article
-     */
     public function setSlug(string $slug): self
     {
         $this->slug = $slug;
@@ -145,19 +122,11 @@ class Article
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getContent(): ?string
     {
         return $this->content;
     }
 
-    /**
-     * @param string|null $content
-     *
-     * @return Article
-     */
     public function setContent(?string $content): self
     {
         $this->content = $content;
@@ -165,39 +134,28 @@ class Article
         return $this;
     }
 
-    /**
-     * @return \DateTimeInterface|null
-     */
     public function getPublishedAt(): ?\DateTimeInterface
     {
         return $this->publishedAt;
     }
 
-    /**
-     * @param \DateTimeInterface $publishedAt
-     *
-     * @return Article
-     */
-    public function setPublishedAt(\DateTimeInterface $publishedAt): self
+    public function isPublished(): bool
+    {
+        return $this->publishedAt !== null;
+    }
+
+    public function setPublishedAt(?\DateTimeInterface $publishedAt): self
     {
         $this->publishedAt = $publishedAt;
 
         return $this;
     }
 
-    /**
-     * @return int|null
-     */
     public function getHeartCount(): ?int
     {
         return $this->heartCount;
     }
 
-    /**
-     * @param int $heartCount
-     *
-     * @return Article
-     */
     public function setHeartCount(int $heartCount): self
     {
         $this->heartCount = $heartCount;
@@ -205,19 +163,18 @@ class Article
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
+    public function incrementHeartCount(): self
+    {
+        $this->heartCount = $this->heartCount + 1;
+
+        return $this;
+    }
+
     public function getImageFilename(): ?string
     {
         return $this->imageFilename;
     }
 
-    /**
-     * @param string|null $imageFilename
-     *
-     * @return Article
-     */
     public function setImageFilename(?string $imageFilename): self
     {
         $this->imageFilename = $imageFilename;
@@ -225,22 +182,9 @@ class Article
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getImagePath()
     {
         return 'images/'.$this->getImageFilename();
-    }
-
-    /**
-     * @return Article
-     */
-    public function incrementHeartCount(): self
-    {
-        ++$this->heartCount;
-
-        return $this;
     }
 
     /**
@@ -256,16 +200,11 @@ class Article
      */
     public function getNonDeletedComments(): Collection
     {
-        $criteria = ArticleRepository::createNonDeletedCriteria();
+        $criteria = CommentRepository::createNonDeletedCriteria();
 
         return $this->comments->matching($criteria);
     }
 
-    /**
-     * @param Comment $comment
-     *
-     * @return Article
-     */
     public function addComment(Comment $comment): self
     {
         if (!$this->comments->contains($comment)) {
@@ -276,11 +215,6 @@ class Article
         return $this;
     }
 
-    /**
-     * @param Comment $comment
-     *
-     * @return Article
-     */
     public function removeComment(Comment $comment): self
     {
         if ($this->comments->contains($comment)) {
@@ -302,11 +236,6 @@ class Article
         return $this->tags;
     }
 
-    /**
-     * @param Tag $tag
-     *
-     * @return Article
-     */
     public function addTag(Tag $tag): self
     {
         if (!$this->tags->contains($tag)) {
@@ -316,11 +245,6 @@ class Article
         return $this;
     }
 
-    /**
-     * @param Tag $tag
-     *
-     * @return Article
-     */
     public function removeTag(Tag $tag): self
     {
         if ($this->tags->contains($tag)) {
@@ -330,19 +254,11 @@ class Article
         return $this;
     }
 
-    /**
-     * @return User|null
-     */
     public function getAuthor(): ?User
     {
         return $this->author;
     }
 
-    /**
-     * @param User|null $author
-     *
-     * @return Article
-     */
     public function setAuthor(?User $author): self
     {
         $this->author = $author;
@@ -351,22 +267,11 @@ class Article
     }
 
     /**
-     * @return bool
-     */
-    public function isPublished(): bool
-    {
-        return null !== $this->publishedAt;
-    }
-
-    /**
      * @Assert\Callback
-     *
-     * @param ExecutionContextInterface $context
-     * @param                           $payload
      */
     public function validate(ExecutionContextInterface $context, $payload)
     {
-        if (false !== stripos($this->getTitle(), 'the borg')) {
+        if (stripos($this->getTitle(), 'the borg') !== false) {
             $context->buildViolation('Um.. the Bork kinda makes us nervous')
                 ->atPath('title')
                 ->addViolation();
@@ -382,7 +287,7 @@ class Article
     {
         $this->location = $location;
 
-        if (!$this->location || 'interstellar_space' === $this->location) {
+        if (!$this->location || $this->location === 'interstellar_space') {
             $this->setSpecificLocationName(null);
         }
 
