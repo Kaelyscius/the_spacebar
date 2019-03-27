@@ -7,7 +7,6 @@ use App\Form\ArticleFormType;
 use App\Repository\ArticleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -36,7 +35,7 @@ class ArticleAdminController extends BaseController
         }
 
         return $this->render('article_admin/new.html.twig', [
-            'articleForm' => $form->createView()
+            'articleForm' => $form->createView(),
         ]);
     }
 
@@ -47,7 +46,7 @@ class ArticleAdminController extends BaseController
     public function edit(Article $article, Request $request, EntityManagerInterface $em)
     {
         $form = $this->createForm(ArticleFormType::class, $article, [
-            'include_published_at' => true
+            'include_published_at' => true,
         ]);
 
         $form->handleRequest($request);
@@ -63,7 +62,7 @@ class ArticleAdminController extends BaseController
         }
 
         return $this->render('article_admin/edit.html.twig', [
-            'articleForm' => $form->createView()
+            'articleForm' => $form->createView(),
         ]);
     }
 
@@ -103,5 +102,19 @@ class ArticleAdminController extends BaseController
         return $this->render('article_admin/list.html.twig', [
             'articles' => $articles,
         ]);
+    }
+
+    /**
+     * @Route("/admin/upload/test", name="upload_test")
+     *
+     * @param Request $request
+     */
+    public function temporaryUploadAction(Request $request)
+    {
+        /** @var UploadedFile $uploadedFile */
+        $uploadedFile = $request->files->get('image');
+
+        $destination = $this->getParameter('kernel.project_dir').'/public/uploads';
+        dd($uploadedFile->move($destination));
     }
 }
