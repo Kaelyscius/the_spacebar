@@ -27,18 +27,21 @@ class ArticleReferenceAdminController extends BaseController
     {
         /** @var UploadedFile $uploadedFile */
         $uploadedFile = $request->files->get('reference');
+        dump($uploadedFile);
+
         $violations = $validator->validate(
             $uploadedFile,
             [
                 new NotBlank([
                     'message' => 'Please select a file to upload',
-                    ]),
+                ]),
                 new File([
                     'maxSize' => '5M',
                     'mimeTypes' => [
                         'image/*',
                         'application/pdf',
                         'application/msword',
+                        'application/vnd.ms-excel',
                         'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
                         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                         'application/vnd.openxmlformats-officedocument.presentationml.presentation',
@@ -47,6 +50,7 @@ class ArticleReferenceAdminController extends BaseController
                 ]),
             ]
         );
+
         if ($violations->count() > 0) {
             /** @var ConstraintViolation $violation */
             $violation = $violations[0];
@@ -79,9 +83,11 @@ class ArticleReferenceAdminController extends BaseController
     {
         $article = $reference->getArticle();
         $this->denyAccessUnlessGranted('MANAGE', $article);
+
         $response = new StreamedResponse(function () use ($reference, $uploaderHelper) {
             $outputStream = fopen('php://output', 'wb');
             $fileStream = $uploaderHelper->readStream($reference->getFilePath(), false);
+
             stream_copy_to_stream($fileStream, $outputStream);
         });
         $response->headers->set('Content-Type', $reference->getMimeType());
