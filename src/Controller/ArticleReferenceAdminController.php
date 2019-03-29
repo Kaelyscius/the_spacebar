@@ -14,7 +14,6 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ArticleReferenceAdminController extends BaseController
@@ -52,13 +51,7 @@ class ArticleReferenceAdminController extends BaseController
         );
 
         if ($violations->count() > 0) {
-            /** @var ConstraintViolation $violation */
-            $violation = $violations[0];
-            $this->addFlash('error', $violation->getMessage());
-
-            return $this->redirectToRoute('admin_article_edit', [
-                'id' => $article->getId(),
-            ]);
+            return $this->json($violations, 400);
         }
 
         $filename = $uploaderHelper->uploadArticleReference($uploadedFile);
@@ -71,9 +64,14 @@ class ArticleReferenceAdminController extends BaseController
         $entityManager->persist($articleReference);
         $entityManager->flush();
 
-        return $this->redirectToRoute('admin_article_edit', [
-            'id' => $article->getId(),
-        ]);
+        return $this->json(
+            $articleReference,
+            201,
+            [],
+            [
+                'groups' => ['main'],
+            ]
+        );
     }
 
     /**
