@@ -26,7 +26,6 @@ class ArticleReferenceAdminController extends BaseController
     {
         /** @var UploadedFile $uploadedFile */
         $uploadedFile = $request->files->get('reference');
-        dump($uploadedFile);
 
         $violations = $validator->validate(
             $uploadedFile,
@@ -67,6 +66,22 @@ class ArticleReferenceAdminController extends BaseController
         return $this->json(
             $articleReference,
             201,
+            [],
+            [
+                'groups' => ['main'],
+            ]
+        );
+    }
+
+    /**
+     * @Route("/admin/article/{id}/references", methods="GET", name="admin_article_list_references")
+     * @IsGranted("MANAGE", subject="article")
+     */
+    public function getArticleReferences(Article $article)
+    {
+        return $this->json(
+            $article->getArticleReferences(),
+            200,
             [],
             [
                 'groups' => ['main'],
