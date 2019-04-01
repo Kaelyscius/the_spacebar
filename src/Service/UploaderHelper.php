@@ -17,21 +17,21 @@ class UploaderHelper
 
     private $filesystem;
 
+    private $privateFilesystem;
+
     private $requestStackContext;
 
     private $logger;
 
     private $publicAssetBaseUrl;
 
-    private $privateFilesystem;
-
     public function __construct(FilesystemInterface $publicUploadsFilesystem, FilesystemInterface $privateUploadsFilesystem, RequestStackContext $requestStackContext, LoggerInterface $logger, string $uploadedAssetsBaseUrl)
     {
         $this->filesystem = $publicUploadsFilesystem;
+        $this->privateFilesystem = $privateUploadsFilesystem;
         $this->requestStackContext = $requestStackContext;
         $this->logger = $logger;
         $this->publicAssetBaseUrl = $uploadedAssetsBaseUrl;
-        $this->privateFilesystem = $privateUploadsFilesystem;
     }
 
     public function uploadArticleImage(File $file, ?string $existingFilename): string
@@ -71,7 +71,9 @@ class UploaderHelper
     public function readStream(string $path, bool $isPublic)
     {
         $filesystem = $isPublic ? $this->filesystem : $this->privateFilesystem;
+
         $resource = $filesystem->readStream($path);
+
         if (false === $resource) {
             throw new \Exception(sprintf('Error opening stream for "%s"', $path));
         }
@@ -79,25 +81,38 @@ class UploaderHelper
         return $resource;
     }
 
-    private function uploadFile(File $file, string $directory, bool $isPublic)
+    public function deleteFile(string $path, bool $isPublic): void
+    {
+        $filesystem = $isPublic ? $this->filesystem : $this->privateFilesystem;
+
+        $result = $filesystem->delete($path);
+
+        if (false === $result) {
+            throw new \Exception(sprintf('Error deleting "%s"', $path));
+        }
+    }
+
+    private function uploadFile(File $file, string $directory, bool $isPublic): string
     {
         if ($file instanceof UploadedFile) {
             $originalFilename = $file->getClientOriginalName();
         } else {
             $originalFilename = $file->getFilename();
         }
+        $newFilename = Urlizer::urlize(pathinfo($originalFilename, PATHINFO_FILENAME)).'-'.uniqid().'.'.$file->guessExtension();
 
         $filesystem = $isPublic ? $this->filesystem : $this->privateFilesystem;
 
-        $newFilename = Urlizer::urlize(pathinfo($originalFilename, PATHINFO_FILENAME)).'-'.uniqid('', true).'.'.$file->guessExtension();
         $stream = fopen($file->getPathname(), 'r');
         $result = $filesystem->writeStream(
             $directory.'/'.$newFilename,
             $stream
         );
+
         if (false === $result) {
             throw new \Exception(sprintf('Could not write uploaded file "%s"', $newFilename));
         }
+
         if (is_resource($stream)) {
             fclose($stream);
         }
