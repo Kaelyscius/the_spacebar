@@ -92,6 +92,36 @@ class ArticleReferenceAdminController extends BaseController
     }
 
     /**
+     * @Route("/admin/article/{id}/references/reorder", methods="POST", name="admin_article_reorder_references")
+     * @IsGranted("MANAGE", subject="article")
+     */
+    public function reorderArticleReferences(Article $article, Request $request, EntityManagerInterface $entityManager)
+    {
+        $orderedIds = json_decode($request->getContent(), true);
+
+        if (null === $orderedIds) {
+            return $this->json(['detail' => 'Invalid body'], 400);
+        }
+
+        // from (position)=>(id) to (id)=>(position)
+        $orderedIds = array_flip($orderedIds);
+        foreach ($article->getArticleReferences() as $reference) {
+            $reference->setPosition($orderedIds[$reference->getId()]);
+        }
+
+        $entityManager->flush();
+
+        return $this->json(
+            $article->getArticleReferences(),
+            200,
+            [],
+            [
+                'groups' => ['main'],
+            ]
+        );
+    }
+
+    /**
      * @Route("/admin/article/references/{id}/download", name="admin_article_download_reference", methods={"GET"})
      */
     public function downloadArticleReference(ArticleReference $reference, UploaderHelper $uploaderHelper)
