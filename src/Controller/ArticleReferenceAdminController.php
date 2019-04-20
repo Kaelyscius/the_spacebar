@@ -6,7 +6,6 @@ use App\Api\ArticleReferenceUploadApiModel;
 use App\Entity\Article;
 use App\Entity\ArticleReference;
 use App\Service\UploaderHelper;
-use Aws\S3\S3Client;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\File\File as FileObject;
@@ -151,25 +150,13 @@ class ArticleReferenceAdminController extends BaseController
     /**
      * @Route("/admin/article/references/{id}/download", name="admin_article_download_reference", methods={"GET"})
      */
-    public function downloadArticleReference(ArticleReference $reference, S3Client $s3Client, string $s3BucketName)
+    public function downloadArticleReference(ArticleReference $reference, UploaderHelper $uploaderHelper)
     {
         $article = $reference->getArticle();
         $this->denyAccessUnlessGranted('MANAGE', $article);
 
-        $disposition = HeaderUtils::makeDisposition(
-            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            $reference->getOriginalFilename()
-        );
-
-        $command = $s3Client->getCommand('GetObject', [
-            'Bucket' => $s3BucketName,
-            'Key' => $reference->getFilePath(),
-            'ResponseContentType' => $reference->getMimeType(),
-            'ResponseContentDisposition' => $disposition,
-        ]);
-        $request = $s3Client->createPresignedRequest($command, '+30 minutes');
-
-        return new RedirectResponse((string) $request->getUri());
+        // see https://symfonycasts.com/screencast/symfony-uploads for real private uploads handling
+        return new RedirectResponse($uploaderHelper->getPublicPath($article->getImagePath()));
     }
 
     /**

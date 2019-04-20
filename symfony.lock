@@ -179,9 +179,6 @@
             "ref": "0eb87bba411c227da027fe5f7c1dc7954b02f242"
         }
     },
-    "php-http/cache-plugin": {
-        "version": "1.6.0"
-    },
     "php-http/client-common": {
         "version": "1.9.1"
     },

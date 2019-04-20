@@ -1,9 +1,11 @@
 Dropzone.autoDiscover = false;
 
 $(document).ready(function() {
-    var referenceList = new ReferenceList($('.js-reference-list'));
-
-    initializeDropzone(referenceList);
+    const $referenceList = $('.js-reference-list');
+    if ($referenceList[0]) {
+        var referenceList = new ReferenceList($('.js-reference-list'));
+        initializeDropzone(referenceList);
+    }
 
     var $locationSelect = $('.js-article-form-location');
     var $specificLocationTarget = $('.js-specific-location-target');
