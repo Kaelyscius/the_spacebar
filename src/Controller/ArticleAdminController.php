@@ -7,7 +7,9 @@ use App\Form\ArticleFormType;
 use App\Repository\ArticleRepository;
 use App\Service\UploaderHelper;
 use Doctrine\ORM\EntityManagerInterface;
+use Gedmo\Sluggable\Util\Urlizer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -45,7 +47,7 @@ class ArticleAdminController extends BaseController
         }
 
         return $this->render('article_admin/new.html.twig', [
-            'articleForm' => $form->createView(),
+            'articleForm' => $form->createView()
         ]);
     }
 
@@ -56,7 +58,7 @@ class ArticleAdminController extends BaseController
     public function edit(Article $article, Request $request, EntityManagerInterface $em, UploaderHelper $uploaderHelper)
     {
         $form = $this->createForm(ArticleFormType::class, $article, [
-            'include_published_at' => true,
+            'include_published_at' => true
         ]);
 
         $form->handleRequest($request);

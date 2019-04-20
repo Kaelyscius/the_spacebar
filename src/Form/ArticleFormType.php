@@ -3,7 +3,10 @@
 namespace App\Form;
 
 use App\Entity\Article;
+use App\Entity\User;
+use App\Repository\ArticleRepository;
 use App\Repository\UserRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -33,28 +36,30 @@ class ArticleFormType extends AbstractType
 
         $builder
             ->add('title', TextType::class, [
-                'help' => 'Choose something catchy!',
+                'help' => 'Choose something catchy!'
             ])
             ->add('content', null, [
-                'rows' => 15,
+                'rows' => 15
             ])
             ->add('author', UserSelectTextType::class, [
-                'disabled' => $isEdit,
+                'disabled' => $isEdit
             ])
             ->add('location', ChoiceType::class, [
                 'placeholder' => 'Choose a location',
                 'choices' => [
                     'The Solar System' => 'solar_system',
                     'Near a star' => 'star',
-                    'Interstellar Space' => 'interstellar_space',
+                    'Interstellar Space' => 'interstellar_space'
                 ],
                 'required' => false,
-            ]);
+            ])
+        ;
+
         $imageConstraints = [
-                 new Image([
-                     'maxSize' => '5M',
-                 ]),
-             ];
+            new Image([
+                'maxSize' => '5M'
+            ])
+        ];
 
         if (!$isEdit || !$article->getImageFilename()) {
             $imageConstraints[] = new NotNull([
@@ -66,7 +71,7 @@ class ArticleFormType extends AbstractType
             ->add('imageFile', FileType::class, [
                 'mapped' => false,
                 'required' => false,
-                'constraints' => $imageConstraints,
+                'constraints' => $imageConstraints
             ])
         ;
 
@@ -94,7 +99,7 @@ class ArticleFormType extends AbstractType
 
         $builder->get('location')->addEventListener(
             FormEvents::POST_SUBMIT,
-            function (FormEvent $event) {
+            function(FormEvent $event) {
                 $form = $event->getForm();
                 $this->setupSpecificLocationNameField(
                     $form->getParent(),
@@ -155,7 +160,7 @@ class ArticleFormType extends AbstractType
             'Alpha Centauari B',
             'Betelgeuse',
             'Rigel',
-            'Other',
+            'Other'
         ];
 
         $locationNameChoices = [

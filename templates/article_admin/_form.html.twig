@@ -2,6 +2,7 @@
     {{ form_row(articleForm.title, {
         label: 'Article title'
     }) }}
+
     <div class="row">
         <div class="col-sm-9">
             {{ form_row(articleForm.imageFile, {
@@ -18,6 +19,7 @@
             {% endif %}
         </div>
     </div>
+
     {{ form_row(articleForm.author) }}
     {{ form_row(articleForm.location, {
         attr: {

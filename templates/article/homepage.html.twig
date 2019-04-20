@@ -18,7 +18,7 @@
 
                 <!-- Supporting Articles -->
 
-            {% for article in articles %}
+                {% for article in articles %}
                 <div class="article-container my-1">
                     <a href="{{ path('article_show', {slug: article.slug}) }}">
                         <img class="article-img" src="{{ article.imagePath|imagine_filter('squared_thumbnail_small') }}">
@@ -37,7 +37,7 @@
                         </div>
                     </a>
                 </div>
-            {% endfor %}
+                {% endfor %}
             </div>
 
             <!-- Right bar ad space -->

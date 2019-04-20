@@ -14,9 +14,9 @@ class ArticleReference
 {
     /**
      * @ORM\Id()
-     * @Groups("main")
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups("main")
      */
     private $id;
 

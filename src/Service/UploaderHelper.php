@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use Gedmo\Sluggable\Util\Urlizer;
+use League\Flysystem\AdapterInterface;
 use League\Flysystem\FileNotFoundException;
 use League\Flysystem\FilesystemInterface;
 use Psr\Log\LoggerInterface;
@@ -17,7 +18,6 @@ class UploaderHelper
 
     private $filesystem;
 
-    private $privateFilesystem;
 
     private $requestStackContext;
 
@@ -25,10 +25,9 @@ class UploaderHelper
 
     private $publicAssetBaseUrl;
 
-    public function __construct(FilesystemInterface $publicUploadsFilesystem, FilesystemInterface $privateUploadsFilesystem, RequestStackContext $requestStackContext, LoggerInterface $logger, string $uploadedAssetsBaseUrl)
+    public function __construct(FilesystemInterface $uploadsFilesystem, RequestStackContext $requestStackContext, LoggerInterface $logger, string $uploadedAssetsBaseUrl)
     {
-        $this->filesystem = $publicUploadsFilesystem;
-        $this->privateFilesystem = $privateUploadsFilesystem;
+        $this->filesystem = $uploadsFilesystem;
         $this->requestStackContext = $requestStackContext;
         $this->logger = $logger;
         $this->publicAssetBaseUrl = $uploadedAssetsBaseUrl;
@@ -42,7 +41,7 @@ class UploaderHelper
             try {
                 $result = $this->filesystem->delete(self::ARTICLE_IMAGE.'/'.$existingFilename);
 
-                if (false === $result) {
+                if ($result === false) {
                     throw new \Exception(sprintf('Could not delete old uploaded file "%s"', $existingFilename));
                 }
             } catch (FileNotFoundException $e) {
@@ -60,34 +59,36 @@ class UploaderHelper
 
     public function getPublicPath(string $path): string
     {
+        $fullPath = $this->publicAssetBaseUrl.'/'.$path;
+        // if it's already absolute, just return
+        if (strpos($fullPath, '://') !== false) {
+            return $fullPath;
+        }
+
         // needed if you deploy under a subdirectory
         return $this->requestStackContext
-                ->getBasePath().$this->publicAssetBaseUrl.'/'.$path;
+            ->getBasePath().$fullPath;
     }
 
     /**
      * @return resource
      */
-    public function readStream(string $path, bool $isPublic)
+    public function readStream(string $path)
     {
-        $filesystem = $isPublic ? $this->filesystem : $this->privateFilesystem;
+        $resource = $this->filesystem->readStream($path);
 
-        $resource = $filesystem->readStream($path);
-
-        if (false === $resource) {
+        if ($resource === false) {
             throw new \Exception(sprintf('Error opening stream for "%s"', $path));
         }
 
         return $resource;
     }
 
-    public function deleteFile(string $path, bool $isPublic): void
+    public function deleteFile(string $path)
     {
-        $filesystem = $isPublic ? $this->filesystem : $this->privateFilesystem;
+        $result = $this->filesystem->delete($path);
 
-        $result = $filesystem->delete($path);
-
-        if (false === $result) {
+        if ($result === false) {
             throw new \Exception(sprintf('Error deleting "%s"', $path));
         }
     }
@@ -101,15 +102,16 @@ class UploaderHelper
         }
         $newFilename = Urlizer::urlize(pathinfo($originalFilename, PATHINFO_FILENAME)).'-'.uniqid().'.'.$file->guessExtension();
 
-        $filesystem = $isPublic ? $this->filesystem : $this->privateFilesystem;
-
         $stream = fopen($file->getPathname(), 'r');
-        $result = $filesystem->writeStream(
+        $result = $this->filesystem->writeStream(
             $directory.'/'.$newFilename,
-            $stream
+            $stream,
+            [
+                'visibility' => $isPublic ? AdapterInterface::VISIBILITY_PUBLIC : AdapterInterface::VISIBILITY_PRIVATE
+            ]
         );
 
-        if (false === $result) {
+        if ($result === false) {
             throw new \Exception(sprintf('Could not write uploaded file "%s"', $newFilename));
         }
 

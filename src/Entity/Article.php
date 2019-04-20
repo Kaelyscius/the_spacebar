@@ -6,6 +6,7 @@ use App\Repository\CommentRepository;
 use App\Service\UploaderHelper;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -116,6 +117,7 @@ class Article
         return $this;
     }
 
+
     public function getSlug(): ?string
     {
         return $this->slug;
@@ -147,7 +149,7 @@ class Article
 
     public function isPublished(): bool
     {
-        return null !== $this->publishedAt;
+        return $this->publishedAt !== null;
     }
 
     public function setPublishedAt(?\DateTimeInterface $publishedAt): self
@@ -277,7 +279,7 @@ class Article
      */
     public function validate(ExecutionContextInterface $context, $payload)
     {
-        if (false !== stripos($this->getTitle(), 'the borg')) {
+        if (stripos($this->getTitle(), 'the borg') !== false) {
             $context->buildViolation('Um.. the Bork kinda makes us nervous')
                 ->atPath('title')
                 ->addViolation();
@@ -293,7 +295,7 @@ class Article
     {
         $this->location = $location;
 
-        if (!$this->location || 'interstellar_space' === $this->location) {
+        if (!$this->location || $this->location === 'interstellar_space') {
             $this->setSpecificLocationName(null);
         }
 

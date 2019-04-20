@@ -3,6 +3,8 @@
 namespace App\DataFixtures;
 
 use App\Entity\Article;
+use App\Entity\Comment;
+use App\Entity\Tag;
 use App\Service\UploaderHelper;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -32,7 +34,7 @@ class ArticleFixtures extends BaseFixture implements DependentFixtureInterface
 
     protected function loadData(ObjectManager $manager)
     {
-        $this->createMany(10, 'main_articles', function ($count) use ($manager) {
+        $this->createMany(10, 'main_articles', function($count) use ($manager) {
             $article = new Article();
             $article->setTitle($this->faker->randomElement(self::$articleTitles))
                 ->setContent(<<<EOF
@@ -53,7 +55,7 @@ strip steak pork belly aliquip capicola officia. Labore deserunt esse chicken lo
 cow est ribeye adipisicing. Pig hamburger pork belly enim. Do porchetta minim capicola irure pancetta chuck
 fugiat.
 EOF
-                );
+            );
 
             // publish most articles
             if ($this->faker->boolean(70)) {

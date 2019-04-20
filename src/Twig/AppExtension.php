@@ -22,7 +22,7 @@ class AppExtension extends AbstractExtension implements ServiceSubscriberInterfa
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('uploaded_asset', [$this, 'getUploadedAssetPath']),
+            new TwigFunction('uploaded_asset', [$this, 'getUploadedAssetPath'])
         ];
     }
 
