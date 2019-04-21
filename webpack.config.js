@@ -23,6 +23,9 @@ Encore
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
+    .configureSplitChunks(function(splitChunks) {
+        splitChunks.minSize = 20000;
+    })
 
     // will require an extra script tag for runtime.js
     // but, you probably want this, unless you're building a single-page app
