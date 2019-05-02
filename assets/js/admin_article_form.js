@@ -1,8 +1,8 @@
 import Dropzone from 'dropzone';
 import 'dropzone/dist/dropzone.css';
-
-
 import Sortable from 'sortablejs';
+import './components/algolia-autocomplete';
+import '../css/algolia-autocomplete.scss'
 
 Dropzone.autoDiscover = false;
 
