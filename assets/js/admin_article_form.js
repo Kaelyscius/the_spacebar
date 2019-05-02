@@ -1,4 +1,12 @@
+import Dropzone from 'dropzone';
+import 'dropzone/dist/dropzone.css';
+
+
+import Sortable from 'sortablejs';
+
 Dropzone.autoDiscover = false;
+
+import $ from 'jquery';
 
 $(document).ready(function() {
     const $referenceList = $('.js-reference-list');

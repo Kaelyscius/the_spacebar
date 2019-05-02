@@ -1,5 +1,6 @@
-import $ from 'jquery';
 import '../css/article_show.scss';
+
+import $ from 'jquery';
 
 $(document).ready(function() {
     $('.js-like-article').on('click', function(e) {
