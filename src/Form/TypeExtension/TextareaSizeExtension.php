@@ -9,6 +9,9 @@ use Symfony\Component\Form\FormTypeExtensionInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * @method iterable getExtendedTypes()
+ */
 class TextareaSizeExtension implements FormTypeExtensionInterface
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -27,12 +30,17 @@ class TextareaSizeExtension implements FormTypeExtensionInterface
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'rows' => 10
+            'rows' => 10,
         ]);
     }
 
     public function getExtendedType()
     {
         return TextareaType::class;
+    }
+
+    public function __call($name, $arguments)
+    {
+        // TODO: Implement @method iterable getExtendedTypes()
     }
 }

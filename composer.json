@@ -11,7 +11,7 @@
         "league/flysystem-aws-s3-v3": "^1.0",
         "league/flysystem-cached-adapter": "^1.0",
         "liip/imagine-bundle": "^2.1",
-        "nexylan/slack-bundle": "^2.0",
+        "nexylan/slack-bundle": "^2.2",
         "oneup/flysystem-bundle": "^3.0",
         "php-http/guzzle6-adapter": "^1.1",
         "sensio/framework-extra-bundle": "^5.1",
